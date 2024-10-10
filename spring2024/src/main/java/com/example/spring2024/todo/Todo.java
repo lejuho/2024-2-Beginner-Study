@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor()
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +33,13 @@ public class Todo {
         this.content = content;
     }
 
+    public void check(){
+        if(!isChecked){
+            isChecked = true;
+        }
+    }
+
+    public void updateContent(String newContent){
+        this.content = newContent;
+    }
 }

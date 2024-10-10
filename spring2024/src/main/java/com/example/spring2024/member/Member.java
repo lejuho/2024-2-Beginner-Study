@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor()
 public class Member {
 
     @Id
@@ -31,6 +31,7 @@ public class Member {
 
     @OneToMany(mappedBy = "user")
     private List<Friend> friends = new ArrayList<>();
+
 
     // 친구 추가 메서드
     public void addFriend(Member friendMember) {
@@ -53,5 +54,10 @@ public class Member {
     public void removeTodo(Todo todo) {
         todos.remove(todo);
         todo.setUser(null);  // 연관관계 해제
+    }
+
+    public void updateLogin(String newLoginId,String newPassword) {
+        this.loginId = newLoginId;
+        this.password = newPassword;
     }
 }

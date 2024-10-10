@@ -8,7 +8,7 @@ import com.example.spring2024.member.Member;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor()
 public class Friend {
 
     @Id
@@ -27,6 +27,12 @@ public class Friend {
     public Friend(Member user, Member friend) {
         this.user = user;
         this.friend = friend;
+    }
+
+    public void updateFriendship(Member user,Member friend) {
+        if(this.user==user) {
+            this.friend = friend;
+        }
     }
 }
 
