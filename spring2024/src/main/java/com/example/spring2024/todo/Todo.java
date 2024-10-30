@@ -27,9 +27,9 @@ public class Todo {
     @JoinColumn(name = "user_id")
     private Member user;
 
-    public Todo(Member user, boolean isChecked, String content) {
+    public Todo(Member user, String content) {
         this.user = user;
-        this.isChecked = isChecked;
+        this.isChecked = false;
         this.content = content;
     }
 

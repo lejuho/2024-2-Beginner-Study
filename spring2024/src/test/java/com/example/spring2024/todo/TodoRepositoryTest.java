@@ -26,7 +26,7 @@ public class TodoRepositoryTest {
     @Rollback(false)
     void todoSaveTest(){
         // 트랜잭션의 시작
-        Todo todo =new Todo(null,false,"todo content");
+        Todo todo =new Todo(null,"todo content");
         todoRepository.save(todo);
 
         // 트랜잭션 종료 => 커밋
@@ -38,7 +38,7 @@ public class TodoRepositoryTest {
     @Test
     @Transactional
     void todoFindOneByIdTest(){
-        Todo todo = new Todo(null,false,"todo content");
+        Todo todo = new Todo(null,"todo content");
         todoRepository.save(todo);
 
         todoRepository.flushAndClear();
@@ -52,9 +52,9 @@ public class TodoRepositoryTest {
     @Test
     @Transactional
     void todoFindAllTest(){
-        Todo todo1 = new Todo(null,false,"todo content");
-        Todo todo2 = new Todo(null,false,"todo content");
-        Todo todo3 = new Todo(null,false,"todo content");
+        Todo todo1 = new Todo(null,"todo content");
+        Todo todo2 = new Todo(null,"todo content");
+        Todo todo3 = new Todo(null,"todo content");
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
@@ -72,9 +72,9 @@ public class TodoRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Todo todo1 = new Todo(member1,false,"todo content");
-        Todo todo2 = new Todo(member1,false,"todo content");
-        Todo todo3 = new Todo(member2,false,"todo content");
+        Todo todo1 = new Todo(member1,"todo content");
+        Todo todo2 = new Todo(member1,"todo content");
+        Todo todo3 = new Todo(member2,"todo content");
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
@@ -90,7 +90,7 @@ public class TodoRepositoryTest {
     @Transactional
     @Rollback(false)
     void todoUpdateTest(){
-        Todo todo1 = new Todo(null,false,"todo content");
+        Todo todo1 = new Todo(null,"todo content");
         todoRepository.save(todo1);
 
         todoRepository.flushAndClear();
@@ -103,8 +103,8 @@ public class TodoRepositoryTest {
     @Transactional
     @Rollback(false)
     void todoDeleteTest(){
-        Todo todo1 = new Todo(null,false,"todo content1");
-        Todo todo2 = new Todo(null,false,"todo content2");
+        Todo todo1 = new Todo(null,"todo content1");
+        Todo todo2 = new Todo(null,"todo content2");
         todoRepository.save(todo1);
         todoRepository.save(todo2);
 
@@ -115,8 +115,5 @@ public class TodoRepositoryTest {
     @AfterAll
     public static void doNotFinish() {
         System.out.println("test finished");
-        while(true){
-
-        }
     }
 }
