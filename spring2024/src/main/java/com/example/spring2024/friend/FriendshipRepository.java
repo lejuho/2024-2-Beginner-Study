@@ -8,28 +8,28 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class FriendRepository {
+public class FriendshipRepository {
 
     @PersistenceContext
     private EntityManager em;
 
-    public void save(Friend friend) {
-        em.persist(friend);
+    public void save(Friendship friendship) {
+        em.persist(friendship);
     }
 
-    public Friend findById(Long FriendId) {
-        return em.find(Friend.class,FriendId);
+    public Friendship findById(Long FriendId) {
+        return em.find(Friendship.class,FriendId);
     }
 
-    public List<Friend> findAllByMember(Member member) {
+    public List<Friendship> findAllByMember(Member member) {
         return em.createQuery(
-                        "SELECT f FROM Friend f WHERE f.user = :member OR f.friend = :member", Friend.class)
+                        "SELECT f FROM Friendship f WHERE f.user = :member OR f.friend = :member", Friendship.class)
                 .setParameter("member", member)
                 .getResultList();
     }
 
     public void updateById(Long FriendshipId,Long UserId,Long FriendId) {
-        Friend friendship = em.find(Friend.class,FriendshipId);
+        Friendship friendship = em.find(Friendship.class,FriendshipId);
         Member user = em.find(Member.class,UserId);
         Member friend = em.find(Member.class,FriendId);
         if(user!=null&&friend!=null) {
@@ -38,8 +38,8 @@ public class FriendRepository {
     }
 
     public void deleteById(Long FriendId) {
-        Friend friend = em.find(Friend.class, FriendId);
-        em.remove(friend);
+        Friendship friendship = em.find(Friendship.class, FriendId);
+        em.remove(friendship);
     }
 
     public void flushAndClear(){

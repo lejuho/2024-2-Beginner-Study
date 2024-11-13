@@ -1,5 +1,6 @@
 package com.example.spring2024.friend;
 
+import com.example.spring2024.friend.dto.FriendshipResponse;
 import com.example.spring2024.member.Member;
 import com.example.spring2024.member.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -17,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class FriendServiceTest {
+public class FriendshipServiceTest {
 
     @Mock
-    FriendRepository friendRepository;
+    FriendshipRepository friendshipRepository;
 
     @Mock
     MemberRepository memberRepository;
 
     @InjectMocks
-    FriendService friendService;
+    FriendshipService friendshipService;
 
     @Test
     public void createFriendTest() throws Exception {
@@ -35,13 +36,13 @@ public class FriendServiceTest {
         Member friend = new Member("testFriend", "testPassword");
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
         BDDMockito.given(memberRepository.findById(2L)).willReturn(friend);
-        BDDMockito.given(friendRepository.findAllByMember(member)).willReturn(Collections.emptyList());
+        BDDMockito.given(friendshipRepository.findAllByMember(member)).willReturn(Collections.emptyList());
 
         // When
-        friendService.createFriend(1L, 2L);
+        friendshipService.createFriend(1L, 2L);
 
         // Then
-        Mockito.verify(friendRepository, Mockito.times(1)).save(any(Friend.class));
+        Mockito.verify(friendshipRepository, Mockito.times(1)).save(any(Friendship.class));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class FriendServiceTest {
 
         // When & Then
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.createFriend(1L, 2L);
+            friendshipService.createFriend(1L, 2L);
         });
         assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
     }
@@ -63,12 +64,12 @@ public class FriendServiceTest {
         Member friend = new Member("testFriend", "testPassword");
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
         BDDMockito.given(memberRepository.findById(2L)).willReturn(friend);
-        BDDMockito.given(friendRepository.findAllByMember(member))
-                .willReturn(List.of(new Friend(member, friend)));
+        BDDMockito.given(friendshipRepository.findAllByMember(member))
+                .willReturn(List.of(new Friendship(member, friend)));
 
         // When & Then
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.createFriend(1L, 2L);
+            friendshipService.createFriend(1L, 2L);
         });
         assertTrue(exception.getMessage().contains("이미 친구입니다."));
     }
@@ -77,15 +78,15 @@ public class FriendServiceTest {
     public void getFriendsTest() throws Exception {
         // Given
         Member member = new Member("testUser", "testPassword");
-        List<Friend> friends = List.of(new Friend(member, new Member("testFriend", "testPassword")));
+        List<Friendship> friendships = List.of(new Friendship(member, new Member("testFriend", "testPassword")));
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
-        BDDMockito.given(friendRepository.findAllByMember(member)).willReturn(friends);
+        BDDMockito.given(friendshipRepository.findAllByMember(member)).willReturn(friendships);
 
         // When
-        List<Friend> result = friendService.getFriends(1L);
+        List<FriendshipResponse> result = friendshipService.getFriends(1L);
 
         // Then
-        assertEquals(friends, result);
+        assertEquals(friendships, result);
     }
 
     @Test
@@ -95,7 +96,7 @@ public class FriendServiceTest {
 
         // When & Then
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.getFriends(1L);
+            friendshipService.getFriends(1L);
         });
         assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
     }
@@ -105,11 +106,11 @@ public class FriendServiceTest {
         // Given
         Member member = new Member("testUser", "testPassword");
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
-        BDDMockito.given(friendRepository.findAllByMember(member)).willReturn(Collections.emptyList());
+        BDDMockito.given(friendshipRepository.findAllByMember(member)).willReturn(Collections.emptyList());
 
         // When & Thena
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.getFriends(1L);
+            friendshipService.getFriends(1L);
         });
         assertTrue(exception.getMessage().contains("친구가 아직 없습니다."));
     }
@@ -119,16 +120,16 @@ public class FriendServiceTest {
         // Given
         Member member = new Member("testUser", "testPassword");
         Member friend = new Member("testFriend", "testPassword");
-        Friend friendship = new Friend(member, friend);
+        Friendship friendship = new Friendship(member, friend);
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
         BDDMockito.given(memberRepository.findById(2L)).willReturn(friend);
-        BDDMockito.given(friendRepository.findAllByMember(member)).willReturn(List.of(friendship));
+        BDDMockito.given(friendshipRepository.findAllByMember(member)).willReturn(List.of(friendship));
 
         // When
-        friendService.deleteFriend(1L, 2L);
+        friendshipService.deleteFriend(1L, 2L);
 
         // Then
-        Mockito.verify(friendRepository, Mockito.times(1)).deleteById(friendship.getId());
+        Mockito.verify(friendshipRepository, Mockito.times(1)).deleteById(friendship.getId());
     }
 
     @Test
@@ -138,7 +139,7 @@ public class FriendServiceTest {
 
         // When & Then
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.deleteFriend(1L, 2L);
+            friendshipService.deleteFriend(1L, 2L);
         });
         assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
     }
@@ -150,11 +151,11 @@ public class FriendServiceTest {
         Member friend = new Member("testFriend", "testPassword");
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
         BDDMockito.given(memberRepository.findById(2L)).willReturn(friend);
-        BDDMockito.given(friendRepository.findAllByMember(member)).willReturn(Collections.emptyList());
+        BDDMockito.given(friendshipRepository.findAllByMember(member)).willReturn(Collections.emptyList());
 
         // When & Then
         Exception exception = assertThrows(Exception.class, () -> {
-            friendService.deleteFriend(1L, 2L);
+            friendshipService.deleteFriend(1L, 2L);
         });
         assertTrue(exception.getMessage().contains("친구가 아닙니다"));
     }

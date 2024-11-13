@@ -1,7 +1,9 @@
 package com.example.spring2024.todo;
 
 import com.example.spring2024.todo.dto.TodoCreateRequest;
+import com.example.spring2024.todo.dto.TodoResponse;
 import com.example.spring2024.todo.dto.TodoUpdateRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +18,14 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping
-    public ResponseEntity<Void> createTodo(@RequestBody TodoCreateRequest request) throws Exception {
+    public ResponseEntity<Void> createTodo(@RequestBody @Valid TodoCreateRequest request) throws Exception {
         Long todoId = todoService.createTodo(request.getContent(),request.getMemberId());
         return ResponseEntity.created(URI.create("/todo/"+todoId)).build();
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<Todo>> getTodoList(@RequestBody Long memberId) throws Exception{
-        List<Todo> todoList = todoService.getTodoList(memberId);
+    @GetMapping("/list/{memberId}")
+    public ResponseEntity<List<TodoResponse>> getTodoList(@PathVariable Long memberId) throws Exception {
+        List<TodoResponse> todoList = todoService.getTodoList(memberId);
         return ResponseEntity.ok().body(todoList);
     }
 
@@ -38,4 +40,6 @@ public class TodoController {
         todoService.updateTodo(todoId,memberId,request.getUpdateContent());
         return ResponseEntity.ok().build();
     }
+
+
 }

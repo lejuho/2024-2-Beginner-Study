@@ -1,5 +1,6 @@
 package com.example.spring2024.member;
 
+import com.example.spring2024.member.dto.MemberResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -35,7 +36,7 @@ public class MemberServiceTest {
         BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
 
         // When
-        Member foundMember = memberService.getMember(1L);
+        MemberResponse foundMember = memberService.getMember(1L);
 
         // Then
         assertEquals(member, foundMember);

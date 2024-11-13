@@ -1,9 +1,8 @@
 package com.example.spring2024.member;
 
-import com.example.spring2024.friend.Friend;
+import com.example.spring2024.friend.Friendship;
 import com.example.spring2024.todo.Todo;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,30 +29,18 @@ public class Member {
     private List<Todo> todos = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Friend> friends = new ArrayList<>();
+    private List<Friendship> friendships = new ArrayList<>();
 
 
     // 친구 추가 메서드
     public void addFriend(Member friendMember) {
-        Friend friendship = new Friend(this, friendMember);
-        friends.add(friendship);
+        Friendship friendship = new Friendship(this, friendMember);
+        friendships.add(friendship);
     }
 
     public Member(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
-    }
-
-    // 할 일 추가 메서드
-    public void addTodo(Todo todo) {
-        todos.add(todo);
-        todo.setUser(this);  // 연관관계 편의 메서드
-    }
-
-    // 할 일 삭제 메서드
-    public void removeTodo(Todo todo) {
-        todos.remove(todo);
-        todo.setUser(null);  // 연관관계 해제
     }
 
     public void updateLogin(String newLoginId,String newPassword) {

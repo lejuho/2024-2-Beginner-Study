@@ -1,7 +1,6 @@
 package com.example.spring2024.friend;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.example.spring2024.member.Member;
@@ -9,7 +8,7 @@ import com.example.spring2024.member.Member;
 @Entity
 @Getter
 @NoArgsConstructor()
-public class Friend {
+public class Friendship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,7 @@ public class Friend {
     @JoinColumn(name = "friend_id")
     private Member friend;
 
-    public Friend(Member user, Member friend) {
+    public Friendship(Member user, Member friend) {
         this.user = user;
         this.friend = friend;
     }
@@ -33,6 +32,10 @@ public class Friend {
         if(this.user==user) {
             this.friend = friend;
         }
+    }
+
+    public void createFriendship(Member user,Member friend) {
+        updateFriendship(user,friend);
     }
 }
 

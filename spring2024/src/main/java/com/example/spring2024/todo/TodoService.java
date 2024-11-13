@@ -2,6 +2,7 @@ package com.example.spring2024.todo;
 
 import com.example.spring2024.member.Member;
 import com.example.spring2024.member.MemberRepository;
+import com.example.spring2024.todo.dto.TodoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +23,22 @@ public class TodoService {
             throw  new Exception("존재하지 않는 멤버입니다.");
         }
 
-        Todo todo = new Todo(member,"content");
+        Todo todo = new Todo(member,content);
         todoRepository.save(todo);
         return todo.getId();
     }
 
     @Transactional(readOnly = true)
-    public List<Todo> getTodoList(Long memberId) throws Exception{
+    public List<TodoResponse> getTodoList(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId);
-        if(member == null){
+        if (member == null) {
             throw new Exception("존재하지 않는 멤버입니다.");
         }
 
-        return todoRepository.findAllByMember(member);
+        List<Todo> todos = todoRepository.findAllByMember(member);
+        return todos.stream()
+                .map(todo -> new TodoResponse(todo.getId(), todo.getContent(), todo.isChecked(), member.getId()))
+                .toList();
     }
 
     @Transactional

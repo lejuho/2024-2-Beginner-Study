@@ -39,4 +39,10 @@ public class MemberRepository {
         em.flush();
         em.clear();
     }
+
+    public Member findByLoginId(String loginId) {
+        return em.createQuery("SELECT m FROM Member m WHERE m.loginId = :loginId", Member.class)
+                .setParameter("loginId", loginId)
+                .getSingleResult();
+    }
 }

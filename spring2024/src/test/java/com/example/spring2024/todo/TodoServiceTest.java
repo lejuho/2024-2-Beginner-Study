@@ -2,6 +2,7 @@ package com.example.spring2024.todo;
 
 import com.example.spring2024.member.Member;
 import com.example.spring2024.member.MemberRepository;
+import com.example.spring2024.todo.dto.TodoResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +52,7 @@ public class TodoServiceTest {
         BDDMockito.given(todoRepository.findAllByMember(member)).willReturn(List.of(new Todo(), new Todo()));
 
         // when
-        List<Todo> todoList = todoService.getTodoList(1L);
+        List<TodoResponse> todoList = todoService.getTodoList(1L);
 
         // then
         assertEquals(2, todoList.size());
