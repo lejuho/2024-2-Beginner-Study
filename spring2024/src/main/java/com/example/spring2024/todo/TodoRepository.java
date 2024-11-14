@@ -38,12 +38,7 @@ public class TodoRepository {
 
     public void todoChecked(Long todoId){
         Todo todo = findById(todoId);
-        if(!todo.isChecked()){
-            todo.check();
-        }
-        else{
-            System.out.println("Already done");
-        }
+        todo.check();
     }
 
     public void deleteById(Long todoId){

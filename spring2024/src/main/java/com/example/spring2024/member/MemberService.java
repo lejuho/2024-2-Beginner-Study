@@ -1,5 +1,7 @@
 package com.example.spring2024.member;
 
+import com.example.spring2024.common.exception.BadRequestException;
+import com.example.spring2024.common.message.ErrorMessage;
 import com.example.spring2024.member.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,42 +20,41 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public MemberResponse getMember(Long memberId) throws Exception {
+    public MemberResponse getMember(Long memberId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
         if (member == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
-
         // MemberResponse DTO로 변환
         return new MemberResponse(member.getId(), member.getLoginId(), member.getPassword());
     }
 
 
     @Transactional
-    public void updateMember(Long memberId,String loginId, String password) throws Exception {
-        Member member = memberRepository.findById(memberId);
+    public void updateMember(Long memberId,String loginId, String password) throws BadRequestException {
+        Member member = memberRepository.findByLoginId(loginId);
         if(member == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
-        member.updateLogin(loginId, password);
+        memberRepository.updateById(memberId,loginId, password);
     }
 
     @Transactional
-    public void deleteMember(Long memberId) throws Exception {
+    public void deleteMember(Long memberId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
         if(member == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
         memberRepository.deleteById(memberId);
     }
 
-    @Transactional(readOnly = true)
-    public Long loginMember(String loginId, String password) throws Exception {
+    @Transactional
+    public Long loginMember(String loginId, String password) throws BadRequestException {
         Member member = memberRepository.findByLoginId(loginId);
         if (member == null || !member.getPassword().equals(password)) {
-            throw new Exception("Invalid login credentials.");
+            throw new BadRequestException(ErrorMessage.INVALID_LOGIN_CREDENTIAL.getMessage());
         }
+        member.signIn();
         return member.getId();  // Return the member ID if login is successful
     }
-
 }

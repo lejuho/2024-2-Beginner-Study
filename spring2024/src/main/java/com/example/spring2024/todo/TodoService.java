@@ -1,5 +1,7 @@
 package com.example.spring2024.todo;
 
+import com.example.spring2024.common.exception.BadRequestException;
+import com.example.spring2024.common.message.ErrorMessage;
 import com.example.spring2024.member.Member;
 import com.example.spring2024.member.MemberRepository;
 import com.example.spring2024.todo.dto.TodoResponse;
@@ -16,12 +18,10 @@ public class TodoService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createTodo(String content,Long memeberId) throws Exception {
-        Member member = memberRepository.findById(memeberId);
-
-        if(member == null){
-            throw  new Exception("존재하지 않는 멤버입니다.");
-        }
+    public Long createTodo(String content,Long memberId) throws BadRequestException {
+        Member member = memberRepository.findById(memberId);
+        if(member == null) throw  new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
+        if(!member.isSigned()) throw new BadRequestException(ErrorMessage.NOT_SIGNED.getMessage());
 
         Todo todo = new Todo(member,content);
         todoRepository.save(todo);
@@ -29,11 +29,10 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public List<TodoResponse> getTodoList(Long memberId) throws Exception {
+    public List<TodoResponse> getTodoList(Long memberId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
-        if (member == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
-        }
+        if (member == null) throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
+        if(!member.isSigned()) throw new BadRequestException(ErrorMessage.NOT_SIGNED.getMessage());
 
         List<Todo> todos = todoRepository.findAllByMember(member);
         return todos.stream()
@@ -42,38 +41,36 @@ public class TodoService {
     }
 
     @Transactional
-    public void updateTodo(Long todoId,Long memberId,String updateContent) throws Exception{
+    public void updateTodo(Long todoId,Long memberId,String updateContent) throws BadRequestException{
         Todo todo = todoRepository.findById(todoId);
-        Member member = memberRepository.findById(memberId);
-
-        if(todo == null) {
-            throw new Exception("존재하지 않는 할 일 입니다.");
-        }
-
-        if(member == null){
-            throw new Exception("존재하지 않는 멤버입니다.");
-        }
-
-        if(todo.getUser()!=member){
-            throw new Exception("할 일을 생성한 유저만 수정할 수 있습니다.");
-        }
-
-        todo.updateContent(updateContent);
+        if(todo == null) throw new BadRequestException(ErrorMessage.TODO_NOT_EXIST.getMessage());
+        Member member = todo.getUser();
+        if(member == null) throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
+        if(!member.isSigned()) throw new BadRequestException(ErrorMessage.NOT_SIGNED.getMessage());
+        todoRepository.updateTodo(todoId,updateContent);
     }
 
     @Transactional
-    public void deleteTodo(Long todoId,Long memberId) throws Exception{
-        Member member = memberRepository.findById(memberId);
+    public void deleteTodo(Long todoId) throws BadRequestException{
         Todo todo = todoRepository.findById(todoId);
-
         if(todo == null){
-            throw new Exception("존재하지 않는 할 일 입니다.");
+            throw new BadRequestException(ErrorMessage.TODO_NOT_EXIST.getMessage());
         }
-
-        if(member == null){
-            throw new Exception("존재하지 않는 멤버입니다.");
-        }
-
+        Member member = todo.getUser();
+        if(member == null) throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
+        if(!member.isSigned()) throw new BadRequestException(ErrorMessage.NOT_SIGNED.getMessage());
         todoRepository.deleteById(todoId);
+    }
+
+    @Transactional
+    public void checkTodo(Long todoId) throws BadRequestException{
+        Todo todo = todoRepository.findById(todoId);
+        if(todo == null){
+            throw new BadRequestException(ErrorMessage.TODO_NOT_EXIST.getMessage());
+        }
+        Member member =todo.getUser();
+        if(member == null) throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
+        if(!member.isSigned()) throw new BadRequestException(ErrorMessage.NOT_SIGNED.getMessage());
+        todoRepository.todoChecked(todoId);
     }
 }

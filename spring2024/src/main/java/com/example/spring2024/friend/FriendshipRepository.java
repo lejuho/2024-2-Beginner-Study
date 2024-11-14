@@ -37,6 +37,10 @@ public class FriendshipRepository {
         }
     }
 
+    public boolean existsByMemberAndFriend(Member member,Member friend) {
+        return findAllByMember(member).contains(new Friendship(member, friend)) || findAllByMember(friend).contains(new Friendship(friend, member));
+    }
+
     public void deleteById(Long FriendId) {
         Friendship friendship = em.find(Friendship.class, FriendId);
         em.remove(friendship);

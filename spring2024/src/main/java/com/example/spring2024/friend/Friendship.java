@@ -33,9 +33,5 @@ public class Friendship {
             this.friend = friend;
         }
     }
-
-    public void createFriendship(Member user,Member friend) {
-        updateFriendship(user,friend);
-    }
 }
 

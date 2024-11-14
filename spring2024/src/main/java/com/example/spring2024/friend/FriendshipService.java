@@ -1,5 +1,7 @@
 package com.example.spring2024.friend;
 
+import com.example.spring2024.common.exception.BadRequestException;
+import com.example.spring2024.common.message.ErrorMessage;
 import com.example.spring2024.friend.dto.FriendshipResponse;
 import com.example.spring2024.member.Member;
 import com.example.spring2024.member.MemberRepository;
@@ -17,16 +19,16 @@ public class FriendshipService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createFriend(Long memberId, Long friendId) throws Exception{
+    public Long createFriend(Long memberId, Long friendId) throws BadRequestException{
         Member member = memberRepository.findById(memberId);
         Member friend = memberRepository.findById(friendId);
         if(member==null || friend==null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
         if (friendshipRepository.findAllByMember(member).stream()
                 .anyMatch(f -> (f.getUser().equals(member) && f.getFriend().equals(friend)) ||
                         (f.getUser().equals(friend) && f.getFriend().equals(member)))) {
-            throw new Exception("이미 친구입니다.");
+            throw new BadRequestException(ErrorMessage.ALREADY_FRIEND.getMessage());
         }
         Friendship friendship = new Friendship(member, friend);
         friendshipRepository.save(friendship);
@@ -34,15 +36,15 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendshipResponse> getFriends(Long memberId) throws Exception {
+    public List<FriendshipResponse> getFriends(Long memberId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
         if (member == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
 
         List<Friendship> friendships = friendshipRepository.findAllByMember(member);
         if (friendships.isEmpty()) {
-            throw new Exception("친구가 아직 없습니다.");
+            throw new BadRequestException(ErrorMessage.ZERO_FRIEND.getMessage());
         }
 
         // FriendshipResponse DTO로 매핑
@@ -55,12 +57,12 @@ public class FriendshipService {
     }
 
     @Transactional
-    public void deleteFriend(Long memberId, Long friendId) throws Exception {
+    public void deleteFriend(Long memberId, Long friendId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
         Member friend = memberRepository.findById(friendId);
 
         if (member == null || friend == null) {
-            throw new Exception("존재하지 않는 멤버입니다.");
+            throw new BadRequestException(ErrorMessage.MEMBER_NOT_EXIST.getMessage());
         }
 
         // 특정 멤버의 모든 친구 관계 조회
@@ -71,8 +73,14 @@ public class FriendshipService {
                 .filter(f -> (f.getUser().equals(member) && f.getFriend().equals(friend)) ||
                         (f.getUser().equals(friend) && f.getFriend().equals(member)))
                 .findFirst()
-                .orElseThrow(() -> new Exception("친구가 아닙니다"));
+                .orElseThrow(() -> new BadRequestException(ErrorMessage.NOT_FRIEND.getMessage()));
 
         friendshipRepository.deleteById(friendshipToDelete.getId());
+    }
+
+    public boolean isFriends(Long memberId, Long friendId) throws BadRequestException {
+        Member member = memberRepository.findById(memberId);
+        Member friend = memberRepository.findById(friendId);
+        return friendshipRepository.existsByMemberAndFriend(member, friend);
     }
 }

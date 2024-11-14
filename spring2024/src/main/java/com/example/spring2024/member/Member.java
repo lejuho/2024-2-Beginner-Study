@@ -1,6 +1,7 @@
 package com.example.spring2024.member;
 
 import com.example.spring2024.friend.Friendship;
+import com.example.spring2024.friendRequest.FriendRequest;
 import com.example.spring2024.todo.Todo;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,20 +32,24 @@ public class Member {
     @OneToMany(mappedBy = "user")
     private List<Friendship> friendships = new ArrayList<>();
 
+    @OneToMany(mappedBy = "sender")
+    private List<FriendRequest> firendRequests = new ArrayList<>();
 
-    // 친구 추가 메서드
-    public void addFriend(Member friendMember) {
-        Friendship friendship = new Friendship(this, friendMember);
-        friendships.add(friendship);
-    }
+    @Column(name = "user_signed", columnDefinition = "tinyint(1)")
+    private boolean signed;
 
     public Member(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
+        this.signed = false;
     }
 
     public void updateLogin(String newLoginId,String newPassword) {
         this.loginId = newLoginId;
         this.password = newPassword;
+    }
+
+    public void signIn(){
+        this.signed = true;
     }
 }

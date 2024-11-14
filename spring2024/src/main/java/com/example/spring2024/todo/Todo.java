@@ -34,9 +34,7 @@ public class Todo {
     }
 
     public void check(){
-        if(!isChecked){
-            isChecked = true;
-        }
+        isChecked = !isChecked;
     }
 
     public void updateContent(String newContent){
