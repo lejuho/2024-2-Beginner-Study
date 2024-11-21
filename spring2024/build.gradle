@@ -40,9 +40,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-task stage(dependsOn: ['clean', 'build']) {
-	doLast {
-		println 'Stage task executed.'
-	}
-}
