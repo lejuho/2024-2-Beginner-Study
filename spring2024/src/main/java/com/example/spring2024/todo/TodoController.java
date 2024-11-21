@@ -4,6 +4,7 @@ import com.example.spring2024.common.exception.BadRequestException;
 import com.example.spring2024.todo.dto.TodoCreateRequest;
 import com.example.spring2024.todo.dto.TodoResponse;
 import com.example.spring2024.todo.dto.TodoUpdateRequest;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class TodoController {
     }
 
     @PatchMapping("/{todoId}/{memberId}/check")
-    public ResponseEntity<Void> updateTodo(@PathVariable Long todoId,@PathVariable Long memberId) throws BadRequestException {
+    public ResponseEntity<Void> check(@PathVariable Long todoId,@PathVariable Long memberId) throws BadRequestException {
         todoService.checkTodo(todoId);
         return ResponseEntity.ok().build();
     }

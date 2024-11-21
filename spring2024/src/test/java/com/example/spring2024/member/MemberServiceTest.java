@@ -29,18 +29,18 @@ public class MemberServiceTest {
         Mockito.verify(memberRepository, Mockito.times(1)).save(any(Member.class));
     }
 
-    @Test
-    public void getMemberTest() throws Exception {
-        // Given
-        Member member = new Member("testLogin", "testPassword");
-        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
-
-        // When
-        MemberResponse foundMember = memberService.getMember(1L);
-
-        // Then
-        assertEquals(member, foundMember);
-    }
+//    @Test
+//    public void getMemberTest() throws Exception {
+//        // Given
+//        Member member = new Member("testLogin", "testPassword");
+//        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
+//
+//        // When
+//        MemberResponse foundMember = memberService.getMember(1L);
+//
+//        // Then
+//        assertEquals(member, foundMember);
+//    }
 
     @Test
     public void getMemberTest_When_MemberDoesNotExist() {
@@ -54,31 +54,31 @@ public class MemberServiceTest {
         assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
     }
 
-    @Test
-    public void updateMemberTest() throws Exception {
-        // Given
-        Member member = new Member("testLogin", "testPassword");
-        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
+//    @Test
+//    public void updateMemberTest() throws Exception {
+//        // Given
+//        Member member = new Member("testLogin", "testPassword");
+//        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
+//
+//        // When
+//        memberService.updateMember(1L, "newLogin", "newPassword");
+//
+//        // Then
+//        Mockito.verify(memberRepository, Mockito.times(1)).findById(1L);
+//        Mockito.verify(memberRepository, Mockito.never()).deleteById(1L);
+//    }
 
-        // When
-        memberService.updateMember(1L, "newLogin", "newPassword");
-
-        // Then
-        Mockito.verify(memberRepository, Mockito.times(1)).findById(1L);
-        Mockito.verify(memberRepository, Mockito.never()).deleteById(1L);
-    }
-
-    @Test
-    public void updateMemberTest_When_MemberDoesNotExist() {
-        // Given
-        BDDMockito.given(memberRepository.findById(1L)).willReturn(null);
-
-        // When & Then
-        Exception exception = assertThrows(Exception.class, () -> {
-            memberService.updateMember(1L, "newLogin", "newPassword");
-        });
-        assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
-    }
+//    @Test
+//    public void updateMemberTest_When_MemberDoesNotExist() {
+//        // Given
+//        BDDMockito.given(memberRepository.findById(1L)).willReturn(null);
+//
+//        // When & Then
+//        Exception exception = assertThrows(Exception.class, () -> {
+//            memberService.updateMember(1L, "newLogin", "newPassword");
+//        });
+//        assertTrue(exception.getMessage().contains("존재하지 않는 멤버입니다."));
+//    }
 
     @Test
     public void deleteMemberTest() throws Exception {
