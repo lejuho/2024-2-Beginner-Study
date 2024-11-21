@@ -5,7 +5,7 @@
 # GlobalExceptionHandler
 서비스 계층의 트랜잭션이나 에러 처리등 모든 클래스나 메서드가 분명히 공통으로 가지는 관심사가 있다. 이런 관심이 반복되는 기능 혹은 작용을 단번에 간편하게 처리하기 위해 **AOP(Aspect-oriented Programming)** 즉 관심 지향 프로그래밍을 사용한다. 이것이 적용된 사례는 이미 서비스 계층에 있는 **@Transactional** 어노테이션과 지금 소개할 `GlobalExceptionHandler`가 있다. `GlobalExceptionHandler`는 스프링 애플리케이션을 실행하며 나는 오류를 일일이 각 컨트롤러 계층에서 잡지 않고 하나의 클래스에서 처리하기 위해 만들어진 개념으로, 클래스 선언 위에 **@ControllerAdvice** 어노테이션을 붙이면 그 클래스는 전역에서 에러 처리를 담당한다.
 만약 할 일 생성 시 로그인 되지 않은 유저가 진행하려 하면 `BadRequestException` 예외가 던져지게 해놨고, 컨트롤러 계층에서 따로 처리하는 코드없이 GlobalExceptionHandler에서 처리하게 해놓았다.
-```
+```java
 package com.example.spring2024.common;
 
 import com.example.spring2024.common.dto.ErrorResponse;
