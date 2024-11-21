@@ -76,7 +76,7 @@ public class FriendshipServiceTest {
 
 //    @Test
 //    public void getFriendsTest() throws Exception {
-//        // Given
+//        //  Given
 //        Member member = new Member("testUser", "testPassword");
 //        List<Friendship> friendships = List.of(new Friendship(member, new Member("testFriend", "testPassword")));
 //        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);

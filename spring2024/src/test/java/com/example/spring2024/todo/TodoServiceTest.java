@@ -46,7 +46,7 @@ public class TodoServiceTest {
 
 //    @Test
 //    public void getTodoListTest() throws Exception {
-//        // given
+//        //  given
 //        Member member = new Member(); // 임의의 Member 객체 생성
 //        BDDMockito.given(memberRepository.findById(1L)).willReturn(member);
 //        BDDMockito.given(todoRepository.findAllByMember(member)).willReturn(List.of(new Todo(), new Todo()));

@@ -70,7 +70,7 @@ public class MemberServiceTest {
 
 //    @Test
 //    public void updateMemberTest_When_MemberDoesNotExist() {
-//        // Given
+//        //  Given
 //        BDDMockito.given(memberRepository.findById(1L)).willReturn(null);
 //
 //        // When & Then
