@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     }
 }
 ```
-```
+```java
 @Transactional
     public Long createTodo(String content,Long memberId) throws BadRequestException {
         Member member = memberRepository.findById(memberId);
