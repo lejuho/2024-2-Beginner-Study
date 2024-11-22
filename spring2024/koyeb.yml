@@ -1,9 +1,0 @@
-name: spring2024
-type: web
-build:
-  commands:
-    - ./gradlew clean build
-run:
-  command: java -jar build/libs/spring2024-0.0.1-SNAPSHOT.jar
-  args:
-    - "--spring.profiles.active=prod"
